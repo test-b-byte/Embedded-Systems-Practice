@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include "fakenews.h"
+
+//mutex technique keys to stop simultaneous read/write bugs
+pthread_mutex_t mutex;
+
+int setT = 72;
+int currentT;
+//off button gate
+char sensorOn = 'a';  
+
+// pthread calls up here, to allow user input, parent or UI thread
+void * userControl(void *tid) {
+    char input;
+    while (sensorOn != 'x') {
+        scanf(" %c", &input);
+        if (input == 'x') {
+            sensorOn = 'x';
+        }
+        else if (input == 't') {
+            scanf("%d", &setT);
+        }
+        else {
+            printf("Press 'x' to exit or 't nn' so set temperature\n");
+        }
+    } return NULL;
+
+
+
+int main (void) {
+    currentT = fakenews();
+    printf("Welcome to Den\n");
+    printf("Set Temperatur: %dF\n", setT);
+    printf("Current Temp: %dF\n", currentT);
+
+    pthread_t uiID;
+    pthread_t trepID;
+    pthread_create(&uiID, NULL, userControl, (void *)&uiID);
+    pthread_create(&trepID, NULL, tempReport, (void *)&trepID);
+
+    pthread_exit(NULL);
+    return 0;
+}
+
+'''
+Multithreading Using pthreads in C language (Part 1)
+Moss
+Moss
+24.3K subscribers
+
+Subscribe
+
+
+    
+
+    while (sensorOn != 'x') {
+        //child
+        printf("Current Temperature: %dF\n", currentT);
+        sleep(4); 
+        char input;
+
+        //Parent
+        scanf("%c", &input);
+        if (input == 'x') {
+            sensorOn = 'x';
+        }
+    } return 0;
+}
+
+
+// @brief 
+//pthread_t thread1;
+//pthread_t thread2;
+//pthread_mutex_init(&mutex, NULL);
+
+
+//pthread_mutex_remove(&mutex);
+
+
+// creating a lock: pthread_mutex_lock(&mutex)
+// realease lock: pthread_mutex_unlock(&mutex) 
+
+
+
